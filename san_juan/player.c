@@ -23,7 +23,7 @@ void initPlayer(player *player1) {
     
     //init goods
     for(size_t i = 0; i < 12; i++) {
-        initCard(&player1->goods[i]);
+        initCard(&player1->goodsCardsArr[i]);
     }
 }
 
@@ -177,4 +177,43 @@ void printPlayerBuildings(player player1) {
             printf("%20s cost: %d vp: %d\n", buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint);
         }
     }
+}
+
+int getOpenProductionSlots(player player1) {
+    //counts the number of production slots
+    //number of production buildings without goods
+    int count = 0;
+    
+    for(size_t i = 0; i < 12; i++) {
+        if(isProductionBuilding(player1.buildingCardsArr[i]) && (player1.goodsCardsArr[i].cardName==-1)) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int getNoOfGoods(player player1) {
+    int count = 0;
+    
+    for(int i = 0; i < 12; i++) {
+        if(player1.goodsCardsArr[i].cardName != 1) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void produceGoods(player *player1, int index, deck *mainDeck) {
+    //this function does not deal with producer role
+    //does not take empty production slots into account
+    if(!isProductionBuilding(player1->buildingCardsArr[index])) {
+        //do nothing if parameter card is not a production building
+        return;
+    }
+    
+    //else produce good
+    card goodCard;
+    initCard(&goodCard);
+    goodCard = popFromTopDeck(mainDeck);
+    player1->goodsCardsArr[index] = goodCard;
 }

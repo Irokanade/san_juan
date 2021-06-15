@@ -55,6 +55,13 @@ void sanJuanGame(int noOfPlayers) {
     for(size_t i = 0; i < noOfPlayers; i++) {
         //draw 4 cards as starting hand
         drawCard(&playerArr[i], 4, &mainDeck);
+        
+        //set indigo plant as first building
+        card startingIndigoPlant;
+        initCard(&startingIndigoPlant);
+        startingIndigoPlant.cardName = indigoPlant;
+        setCard(&startingIndigoPlant);
+        playerArr[i].buildingCardsArr[0] = startingIndigoPlant;
     }
     
     while(!gameOver) {
@@ -82,7 +89,7 @@ void sanJuanGame(int noOfPlayers) {
             int roleChoice = -1;
             while(roleChoice < 0 || roleChoice > 3) {
                 printf("player %d choose a role\n", playerArrIndex);
-                for(int i = 0; i < 4; i++) {
+                for(int i = 0; i < 5; i++) {
                     if(roleMainDeck.roleArr[i] != nullRole) {
                         printf("%1d - %s\n", i, roleTypeStr[i]);
                     } else {
@@ -104,7 +111,7 @@ void sanJuanGame(int noOfPlayers) {
             //first player turn start
             //builder role
             if(playerArr[playerArrIndex].currRole == builder) {
-                //every body gets to build starting from the player with builder role
+                //everybody gets to build starting from the player with builder role
                 int playerBuildIndex = playerArrIndex;
                 for(int j = 0; j < noOfPlayers; j++) {
                     playerBuildIndex = playerArrIndex+j;
@@ -166,6 +173,45 @@ void sanJuanGame(int noOfPlayers) {
                         
                     } else {
                         printf("player %d does not build anything\n", playerBuildIndex);
+                    }
+                    
+                }
+                
+            } else if(playerArr[playerArrIndex].currRole == producer) {
+                //producer role
+                //everybody gets to produce starting from the player with the producer role
+                int playerProduceIndex = playerArrIndex;
+                for(int j = 0; j < noOfPlayers; j++) {
+                    playerProduceIndex = playerArrIndex+j;
+                    
+                    if(playerProduceIndex >= noOfPlayers) {
+                        playerProduceIndex -= noOfPlayers;
+                    }
+                    
+                    int noOfGoodCanProduce = 1; //defaults to 1
+                    //need to deal with producer role
+                    while(noOfGoodCanProduce > 0) {
+                        int produceIndex = -1; //index where good will be produced
+                        printf("player %d build\n", playerProduceIndex);
+                        printf("___player %d choose building to produce___\n", playerProduceIndex);
+                        for(int k = 0; k < 12; k++) {
+                            if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
+                                if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
+                                    //there is no good under the production building
+                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerProduceIndex].hand[k].cardName], playerArr[playerProduceIndex].hand[k].cost, playerArr[playerProduceIndex].hand[k].victoryPoint);
+                                } else {
+                                    printf("already has good %20s cost: %d vp: %d\n", buildingStr[playerArr[playerProduceIndex].hand[k].cardName], playerArr[playerProduceIndex].hand[k].cost, playerArr[playerProduceIndex].hand[k].victoryPoint);
+                                }
+                            }
+                        }
+                        printf("__________________\n");
+                        printf("enter good to produce (0-12) enter -1 to not produce good: ");
+                        scanf(" %d", &produceIndex);
+                        
+                        if(produceIndex != -1) {
+                            produceGoods(&playerArr[playerProduceIndex], produceIndex, &mainDeck);
+                        }
+                        noOfGoodCanProduce--;
                     }
                     
                 }

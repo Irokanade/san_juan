@@ -225,3 +225,11 @@ int addToDeck(deck *deck1, card newCard) {
     
     return 1;
 }
+
+int isProductionBuilding(card card1) {
+    if(card1.cardName>=indigoPlant && card1.cardName<=silverSmelter) {
+        return 1;
+    }
+    
+    return 0;
+}

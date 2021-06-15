@@ -108,5 +108,6 @@ void setDeck(deck *deck1);
 int getTopDeckIndex(deck deck1);
 card popFromTopDeck(deck *deck1);;
 int addToDeck(deck *deck1, card newCard);
+int isProductionBuilding(card card1);
 
 #endif /* card_h */

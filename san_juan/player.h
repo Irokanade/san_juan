@@ -14,26 +14,28 @@
 typedef enum _roleType {
     nullRole = -1,
     builder = 0,
-    trader = 1,
-    councillor = 2,
-    prospector = 3,
+    producer = 1,
+    trader = 2,
+    councillor = 3,
+    prospector = 4,
 } roleType;
 
 static char *roleTypeStr[] = {
     "builder",
+    "producer",
     "trader",
     "councillor",
     "prospector"
 };
 
 typedef struct _roleDeck {
-    roleType roleArr[4]; //maximum of 4 types of roles
+    roleType roleArr[5]; //maximum of 5 types of roles
 } roleDeck;
 
 typedef struct _player {
     card hand[110]; //just add extra to the buffer, need function to make sure hand size is 7 or 12 due to tower
     card buildingCardsArr[12]; //maximum of 12 buildings
-    card goods[12]; //maximum of 12 goods 1 good per production building
+    card goodsCardsArr[12]; //good has the same index as the production building that produced it
     roleType currRole;
     uint8_t currGov;
 } player;
@@ -52,5 +54,8 @@ int getHandSize(player player1);
 int sufficientCostToBuild(player player1, card newBuilding);
 int buildBuildings(player *player1, card newBuilding); //build buildings
 void printPlayerBuildings(player player1);
+int getOpenProductionSlots(player player1);
+int getNoOfGoods(player player1);
+void produceGoods(player *player1, int index, deck *mainDeck);
 
 #endif /* player_h */
