@@ -85,7 +85,7 @@ void setRoleDeck(roleDeck *roleDeck1) {
 }
 
 int drawFromRoleDeck(roleDeck *roleDeck1, roleType drawRole) {
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
         if(roleDeck1->roleArr[i] == drawRole) {
             roleDeck1->roleArr[i] = nullRole;
             return 1;

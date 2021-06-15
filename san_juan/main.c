@@ -87,7 +87,7 @@ void sanJuanGame(int noOfPlayers) {
             
             //need to choose role
             int roleChoice = -1;
-            while(roleChoice < 0 || roleChoice > 3) {
+            while(roleChoice < 0 || roleChoice > 4) {
                 printf("player %d choose a role\n", playerArrIndex);
                 for(int i = 0; i < 5; i++) {
                     if(roleMainDeck.roleArr[i] != nullRole) {
@@ -198,9 +198,9 @@ void sanJuanGame(int noOfPlayers) {
                             if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
                                 if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
                                     //there is no good under the production building
-                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerProduceIndex].hand[k].cardName], playerArr[playerProduceIndex].hand[k].cost, playerArr[playerProduceIndex].hand[k].victoryPoint);
+                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
                                 } else {
-                                    printf("already has good %20s cost: %d vp: %d\n", buildingStr[playerArr[playerProduceIndex].hand[k].cardName], playerArr[playerProduceIndex].hand[k].cost, playerArr[playerProduceIndex].hand[k].victoryPoint);
+                                    printf("already has good %20s cost: %d vp: %d\n", buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
                                 }
                             }
                         }
