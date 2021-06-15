@@ -98,11 +98,15 @@ typedef struct _deck {
     card cardArr[110]; //exactly 110 cards
 } deck;
 
+void cleanUpCardArr(card *cardArr);
 void shuffleDeck(deck *array, size_t n);
 void initCard(card *card1);
 void setCard(card *card1);
 void setCardArr(card *cardArr, size_t size, building setBuilding);
 void initDeck(deck *deck1, size_t size);
 void setDeck(deck *deck1);
+int getTopDeckIndex(deck deck1);
+card popFromTopDeck(deck *deck1);;
+int addToDeck(deck *deck1, card newCard);
 
 #endif /* card_h */

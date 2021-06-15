@@ -38,13 +38,10 @@ typedef struct _player {
     uint8_t currGov;
 } player;
 
-void cleanUpHand(card *cardArr);
 void initPlayer(player *player1);
 void initAllPlayers(player *playerArr, uint8_t noOfPlayers);
 int getEmptyHandIndex(player player1);
 void printPlayerHand(player player1);
-int getTopDeckIndex(deck deck1);
-card popFromTopDeck(deck *deck1);
 void drawCard(player *player1, size_t noOfCards, deck *deck1);
 void setRole(player *player1, roleType newRole);
 void setRoleDeck(roleDeck *roleDeck1);
@@ -54,5 +51,6 @@ int getEmptyBuildingSlotIndex(player player1);
 int getHandSize(player player1);
 int sufficientCostToBuild(player player1, card newBuilding);
 int buildBuildings(player *player1, card newBuilding); //build buildings
+void printPlayerBuildings(player player1);
 
 #endif /* player_h */

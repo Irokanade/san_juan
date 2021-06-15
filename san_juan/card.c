@@ -8,6 +8,56 @@
 #include "card.h"
 #include <stdlib.h>
 
+void cleanUpCardArr(card *cardArr) {
+    //test print
+    /*printf("Before\n");
+    for(size_t i = 0; i < 6; i++) {
+        printf("card[%zu]: %s\n", i, buildingStr[cardArr[i].cardName]);
+    }*/
+    
+    //search for null card
+    //then search not null card
+    //then move all elements from the not null card
+    //to the first null card position
+    //then add the subsequent number of null cards at the back
+    for(int i = 0; i < 110; i++) {
+        int firstNullCardIndex = -1; //initialize to -1
+        int firstNotNullCardIndex = -1; //initialize to -1
+        if(cardArr[i].cardName == -1) {
+            firstNullCardIndex = i;
+            for(int j = i; j < 110; j++) {
+                if(cardArr[j].cardName != -1) {
+                    firstNotNullCardIndex = j;
+                    break;
+                }
+            }
+        }
+        
+        //move all elements from firstNotNullCardIndex to firstNullCardIndex
+        //firstNotNullCardIndex must be found else don't move elements
+        if(firstNotNullCardIndex != -1) {
+            int k = firstNullCardIndex;
+            for(int j = firstNotNullCardIndex; j < 110; j++) {
+                cardArr[k] = cardArr[j];
+                k++;
+            }
+            
+            //fill the rest with null cards
+            for(k = k; k < 110; k++) {
+                initCard(&cardArr[k]);
+            }
+        }
+    }
+    
+    //test print
+    /*printf("After\n");
+    for(size_t i = 0; i < 6; i++) {
+        printf("card[%zu]: %s\n", i, buildingStr[cardArr[i].cardName]);
+    }*/
+    
+    return;
+}
+
 void shuffleDeck(deck *deck1, size_t n) {
     if (n > 1) {
         int i;
@@ -109,4 +159,69 @@ void setDeck(deck *deck1) {
     //shuffle deck (shuffle it outside of this function)
     //shuffleDeck(deck1->cardArr, 110);
     
+}
+
+int getTopDeckIndex(deck deck1) {
+    //find first non null card from the deck
+    //search index start from 0
+    int index = 0;
+    while(deck1.cardArr[index].cardName == -1) {
+        index++;
+        if(index >= 110) {
+            //search failed
+            return -1;
+        }
+    }
+    
+    return index;
+}
+
+int getBottomDeckIndex(deck deck1) {
+    //find the first null card from the deck
+    //search index start from 0
+    int index = 0;
+    while(deck1.cardArr[index].cardName != -1) {
+        index++;
+        if(index >= 110) {
+            //search failed
+            return -1;
+        }
+    }
+    
+    return index;
+}
+
+card popFromTopDeck(deck *deck1) {
+    //get card from the top of the deck
+    card result;
+    int index = getTopDeckIndex(*deck1);
+    
+    initCard(&result);
+    index = getTopDeckIndex(*deck1);
+    
+    if(index == -1) {
+        //search failed return null card
+        //deck is empty
+        return result;
+    }
+    result = deck1->cardArr[index];
+    initCard(&deck1->cardArr[index]);
+    
+    cleanUpCardArr(deck1->cardArr);
+    
+    return result;
+}
+
+int addToDeck(deck *deck1, card newCard) {
+    int index = getBottomDeckIndex(*deck1);
+    
+    if(index == -1) {
+        //deck is full
+        return -1;
+    }
+    
+    deck1->cardArr[index] = newCard;
+    cleanUpCardArr(deck1->cardArr);
+    
+    return 1;
 }

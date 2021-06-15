@@ -7,56 +7,6 @@
 
 #include "player.h"
 
-void cleanUpHand(card *cardArr) {
-    //test print
-    printf("Before\n");
-    for(size_t i = 0; i < 6; i++) {
-        printf("card[%zu]: %s\n", i, buildingStr[cardArr[i].cardName]);
-    }
-    
-    //search for null card
-    //then search not null card
-    //then move all elements from the not null card
-    //to the first null card position
-    //then add the subsequent number of null cards at the back
-    for(int i = 0; i < 110; i++) {
-        int firstNullCardIndex = -1; //initialize to -1
-        int firstNotNullCardIndex = -1; //initialize to -1
-        if(cardArr[i].cardName == -1) {
-            firstNullCardIndex = i;
-            for(int j = i; j < 110; j++) {
-                if(cardArr[j].cardName != -1) {
-                    firstNotNullCardIndex = j;
-                    break;
-                }
-            }
-        }
-        
-        //move all elements from firstNotNullCardIndex to firstNullCardIndex
-        //firstNotNullCardIndex must be found else don't move elements
-        if(firstNotNullCardIndex != -1) {
-            int k = firstNullCardIndex;
-            for(int j = firstNotNullCardIndex; j < 110; j++) {
-                cardArr[k] = cardArr[j];
-                k++;
-            }
-            
-            //fill the rest with null cards
-            for(k = k; k < 110; k++) {
-                initCard(&cardArr[k]);
-            }
-        }
-    }
-    
-    //test print
-    printf("After\n");
-    for(size_t i = 0; i < 6; i++) {
-        printf("card[%zu]: %s\n", i, buildingStr[cardArr[i].cardName]);
-    }
-    
-    return;
-}
-
 void initPlayer(player *player1) {
     player1->currGov = 0;
     player1->currRole = -1;
@@ -101,43 +51,9 @@ void printPlayerHand(player player1) {
     for(int i = 0; i < 110; i++) {
         if(player1.hand[i].cardName != -1) {
             //don't print null cards
-            printf("%d - %s\n", i, buildingStr[player1.hand[i].cardName]);
+            printf("%d - %20s cost: %d vp: %d\n", i, buildingStr[player1.hand[i].cardName], player1.hand[i].cost, player1.hand[i].victoryPoint);
         }
     }
-}
-
-int getTopDeckIndex(deck deck1) {
-    //find first null card from the deck
-    //search index start from 0
-    int index = 0;
-    while(deck1.cardArr[index].cardName == -1) {
-        index++;
-        if(index == 110) {
-            //search failed
-            return -1;
-        }
-    }
-    
-    return index;
-}
-
-card popFromTopDeck(deck *deck1) {
-    //get card from the top of the deck
-    card result;
-    int index = getTopDeckIndex(*deck1);
-    
-    initCard(&result);
-    index = getTopDeckIndex(*deck1);
-    
-    if(index == -1) {
-        //search failed return null card
-        //deck is empty
-        return result;
-    }
-    result = deck1->cardArr[index];
-    initCard(&deck1->cardArr[index]);
-    
-    return result;
 }
 
 void drawCard(player *player1, size_t noOfCards, deck *deck1) {
@@ -150,6 +66,9 @@ void drawCard(player *player1, size_t noOfCards, deck *deck1) {
         topCard = popFromTopDeck(deck1);
         player1->hand[handIndex] = topCard;
     }
+    
+    cleanUpCardArr(player1->hand);
+    cleanUpCardArr(deck1->cardArr);
 }
 
 void setRole(player *player1, roleType newRole) {
@@ -185,7 +104,7 @@ card popCardFromHand(player *player1, building choosenBuilding) {
         if(player1->hand[i].cardName == choosenBuilding) {
             result = player1->hand[i];
             initCard(&player1->hand[i]);
-            cleanUpHand(player1->hand);
+            cleanUpCardArr(player1->hand);
         }
     }
     
@@ -219,6 +138,12 @@ int sufficientCostToBuild(player player1, card newBuilding) {
     int newSize = 0; //number of cards minus the card to build
     cost = newBuilding.cost;
     
+    //check if player is builder role
+    //builder role pay 1 card less
+    if(player1.currRole == builder) {
+        cost--;
+    }
+    
     popCardFromHand(&player1, newBuilding.cardName);
     newSize = getHandSize(player1);
     
@@ -242,4 +167,14 @@ int buildBuildings(player *player1, card newBuilding) {
     player1->buildingCardsArr[index] = newBuilding;
     
     return 1;
+}
+
+void printPlayerBuildings(player player1) {
+    for(int i = 0; i < 12; i++) {
+        if(player1.buildingCardsArr[i].cardName == -1) {
+            return;
+        } else {
+            printf("%20s cost: %d vp: %d\n", buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint);
+        }
+    }
 }

@@ -74,8 +74,8 @@ void sanJuanGame(int noOfPlayers) {
         for(int i = 0; i < noOfPlayers; i++) {
             int playerArrIndex = governor+i;
             
-            if(playerArrIndex >= 3) {
-                playerArrIndex -= 3;
+            if(playerArrIndex >= noOfPlayers) {
+                playerArrIndex -= noOfPlayers;
             }
             
             //need to choose role
@@ -90,7 +90,7 @@ void sanJuanGame(int noOfPlayers) {
                     }
                 }
                 printf("choice: ");
-                scanf("%d", &roleChoice);
+                scanf(" %d", &roleChoice);
                 if(drawFromRoleDeck(&roleMainDeck, roleChoice) == -1) {
                     printf("%s already chosen >:[\n", roleTypeStr[roleChoice]);
                     puts("choose again");
@@ -104,27 +104,80 @@ void sanJuanGame(int noOfPlayers) {
             //first player turn start
             //builder role
             if(playerArr[playerArrIndex].currRole == builder) {
-                //every body gets to build starting from the governor
-                int playerBuildIndex = 0;
-                int buildChoice = 0;
-                printf("___player %d hand___\n", playerArrIndex);
-                printPlayerHand(playerArr[playerArrIndex]);
-                printf("__________________\n");
-                printf("enter card to build (number choice): ");
-                scanf("%d", &buildChoice);
+                //every body gets to build starting from the player with builder role
+                int playerBuildIndex = playerArrIndex;
+                for(int j = 0; j < noOfPlayers; j++) {
+                    playerBuildIndex = playerArrIndex+j;
+                    
+                    if(playerBuildIndex >= noOfPlayers) {
+                        playerBuildIndex -= noOfPlayers;
+                    }
+                    
+                    int buildChoice = 0;
+                    printf("player %d build\n", playerBuildIndex);
+                    printf("___player %d hand___\n", playerBuildIndex);
+                    for(int k = 0; k < 110; k++) {
+                        if(playerArr[playerBuildIndex].hand[k].cardName == -1) {
+                            break;
+                        } else if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k]) != -1) {
+                            printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                        } else {
+                            printf("not enoungh cards to build %20s cost: %d vp: %d\n", buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                        }
+                    }
+                    printf("__________________\n");
+                    printf("enter card to build (enter -1 to not build): ");
+                    scanf(" %d", &buildChoice);
+                    
+                    if(buildChoice != -1) {
+                        //discard cards for cost
+                        card newBuilding;
+                        initCard(&newBuilding);
+                        newBuilding = popCardFromHand(&playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[buildChoice].cardName);
+                        int discardCost = newBuilding.cost;
+                        if(playerArr[playerBuildIndex].currRole == builder) {
+                            //builder role pay one card less to build
+                            discardCost--;
+                        }
+                        
+                        while(discardCost > 0) {
+                            int discardChoice = -1;
+                            card discardCard;
+                            initCard(&discardCard);
+                            
+                            printf("___choose cards to discard___\n");
+                            printf("___cards to discard %d___\n", discardCost);
+                            printPlayerHand(playerArr[playerBuildIndex]);
+                            printf("__________________\n");
+                            printf("enter card to discard: ");
+                            scanf(" %d", &discardChoice);
+                            discardCard = popCardFromHand(&playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[discardChoice].cardName);
+                            addToDeck(&discardDeck, discardCard);
+                            discardCost--;
+                        }
+                        
+                        //cost is paid then build the building
+                        buildBuildings(&playerArr[playerBuildIndex], newBuilding);
+                        
+                        //print buildings
+                        printf("___player %d buildings___\n", playerBuildIndex);
+                        printPlayerBuildings(playerArr[playerBuildIndex]);
+                        printf("__________________\n");
+                        
+                    } else {
+                        printf("player %d does not build anything\n", playerBuildIndex);
+                    }
+                    
+                }
                 
-                card newBuilding;
-                initCard(&newBuilding);
-                newBuilding = popCardFromHand(&playerArr[playerArrIndex], playerArr[playerArrIndex].hand[buildChoice].cardName);
+            } else if(0) {
+                //trader role
+            } else if(0) {
+                //councillor role
+            } else if(playerArr[playerArrIndex].currRole == prospector) {
+                //prospector role
+                drawCard(&playerArr[playerArrIndex], 1, &mainDeck);
             }
-            
-            
-            //trader role
-            
-            //councillor role
-            
-            //prospector role
-            drawCard(&playerArr[playerArrIndex], 1, &mainDeck);
         }
         
         //printf("governor: %d\n", governor);
