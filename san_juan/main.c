@@ -35,12 +35,14 @@ void sanJuanGame(int noOfPlayers) {
     deck discardDeck;
     size_t turnCounter = 0; //turn counter starts from 0
     int gameOver = 0;
+    tradingHouseTileDeck tradingHouseMainDeck;
     
     initDeck(&mainDeck, 110);
     initDeck(&discardDeck, 110);
     
     setDeck(&mainDeck);
     shuffleDeck(&mainDeck, 110);
+    setTradingHouseTileDeck(&tradingHouseMainDeck);
         
     //print deck
     /*for(size_t i = 0; i < 110; i++) {

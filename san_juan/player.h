@@ -28,6 +28,18 @@ static char *roleTypeStr[] = {
     "prospector"
 };
 
+typedef struct _tradingHouseTile {
+    int indigoPlantPrice;
+    int sugarMillPrice;
+    int tobaccoStoragePrice;
+    int coffeRoasterPrice;
+    int silverSmelterPrice;
+} tradingHouseTile;
+
+typedef struct _tradingHouseTileDeck {
+    tradingHouseTile tradingHouseTileArr[5]; //only 5 trading house tiles
+} tradingHouseTileDeck;
+
 typedef struct _roleDeck {
     roleType roleArr[5]; //maximum of 5 types of roles
 } roleDeck;
@@ -57,5 +69,9 @@ void printPlayerBuildings(player player1);
 int getOpenProductionSlots(player player1);
 int getNoOfGoods(player player1);
 void produceGoods(player *player1, int index, deck *mainDeck);
+void setTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
+void rotateTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
+tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
+int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding);
 
 #endif /* player_h */

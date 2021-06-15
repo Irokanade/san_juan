@@ -217,3 +217,77 @@ void produceGoods(player *player1, int index, deck *mainDeck) {
     goodCard = popFromTopDeck(mainDeck);
     player1->goodsCardsArr[index] = goodCard;
 }
+
+void setTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1) {
+    
+    //tile 0
+    tradingHouseTileDeck1->tradingHouseTileArr[0].indigoPlantPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[0].sugarMillPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[0].tobaccoStoragePrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[0].coffeRoasterPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[0].silverSmelterPrice = 2;
+    
+    //tile 1
+    tradingHouseTileDeck1->tradingHouseTileArr[1].indigoPlantPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[1].sugarMillPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[1].tobaccoStoragePrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[1].coffeRoasterPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[1].silverSmelterPrice = 2;
+    
+    //tile 2
+    tradingHouseTileDeck1->tradingHouseTileArr[2].indigoPlantPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[2].sugarMillPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[2].tobaccoStoragePrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[2].coffeRoasterPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[2].silverSmelterPrice = 3;
+    
+    //tile 3
+    tradingHouseTileDeck1->tradingHouseTileArr[3].indigoPlantPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[3].sugarMillPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[3].tobaccoStoragePrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[3].coffeRoasterPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[3].silverSmelterPrice = 3;
+    
+    //tile 4
+    tradingHouseTileDeck1->tradingHouseTileArr[4].indigoPlantPrice = 1;
+    tradingHouseTileDeck1->tradingHouseTileArr[4].sugarMillPrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[4].tobaccoStoragePrice = 2;
+    tradingHouseTileDeck1->tradingHouseTileArr[4].coffeRoasterPrice = 3;
+    tradingHouseTileDeck1->tradingHouseTileArr[4].silverSmelterPrice = 3;
+}
+
+void rotateTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1) {
+    tradingHouseTile temp = tradingHouseTileDeck1->tradingHouseTileArr[0];
+    for(int i = 0; i < 4; i++) {
+        //move everything up
+        tradingHouseTileDeck1->tradingHouseTileArr[i] = tradingHouseTileDeck1->tradingHouseTileArr[i+1];
+    }
+    //put the top most card to the bottom
+    tradingHouseTileDeck1->tradingHouseTileArr[4] = temp;
+}
+
+tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileDeck1) {
+    tradingHouseTile result = tradingHouseTileDeck1->tradingHouseTileArr[0];
+    rotateTradingHouseTileDeck(tradingHouseTileDeck1);
+    return result;
+}
+
+int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding) {
+    //get price of good from the building it is produced from
+    int price = 0;
+    
+    if(productionBuilding == indigoPlant) {
+        price = tradingHouseTile1.indigoPlantPrice;
+    } else if(productionBuilding == sugarMill) {
+        price = tradingHouseTile1.sugarMillPrice;
+    } else if(productionBuilding == tobaccoStorage) {
+        price = tradingHouseTile1.tobaccoStoragePrice;
+    } else if(productionBuilding == coffeeRoaster) {
+        price = tradingHouseTile1.coffeRoasterPrice;
+    } else if(productionBuilding == silverSmelter) {
+        price = tradingHouseTile1.silverSmelterPrice;
+    }
+    
+    //return 0 if failed (building parameter was not a production building)
+    return price;
+}
