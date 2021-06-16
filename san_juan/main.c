@@ -192,9 +192,12 @@ void sanJuanGame(int noOfPlayers) {
                     
                     int noOfGoodCanProduce = 1; //defaults to 1
                     //need to deal with producer role
+                    if(playerArr[playerProduceIndex].currRole == producer) {
+                        noOfGoodCanProduce = 2;
+                    }
                     while(noOfGoodCanProduce > 0) {
                         int produceIndex = -1; //index where good will be produced
-                        printf("player %d build\n", playerProduceIndex);
+                        printf("player %d produce\n", playerProduceIndex);
                         printf("___player %d choose building to produce___\n", playerProduceIndex);
                         for(int k = 0; k < 12; k++) {
                             if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
@@ -207,7 +210,7 @@ void sanJuanGame(int noOfPlayers) {
                             }
                         }
                         printf("__________________\n");
-                        printf("enter good to produce (0-12) enter -1 to not produce good: ");
+                        printf("enter good to produce enter -1 to not produce good: ");
                         scanf(" %d", &produceIndex);
                         
                         if(produceIndex != -1) {
@@ -218,20 +221,89 @@ void sanJuanGame(int noOfPlayers) {
                     
                 }
                 
-            } else if(0) {
+            } else if(playerArr[playerArrIndex].currRole == trader) {
                 //trader role
+                //get the price first
+                tradingHouseTile currPrices;
+                currPrices = popFromTradingHouseDeck(&tradingHouseMainDeck);
+                
+                //everybody gets to trade starting from the player who chose the trader role
+                int playerTraderIndex = playerArrIndex;
+                for(int j = 0; j < noOfPlayers; j++) {
+                    playerTraderIndex = playerArrIndex+j;
+                    
+                    if(playerTraderIndex >= noOfPlayers) {
+                        playerTraderIndex -= noOfPlayers;
+                    }
+                    
+                    int noOfGoodsCanTrade = 1; //defaults to 1
+                    //need to deal with trader role
+                    if(playerArr[playerTraderIndex].currRole == trader) {
+                        noOfGoodsCanTrade = 2;
+                    }
+                    while(noOfGoodsCanTrade) {
+                        int goodToSellIndex = -1; //index of which good to be sold
+                        printf("player %d sell\n", playerTraderIndex);
+                        printf("___player %d choose good to sell___\n", playerTraderIndex);
+                        for(int k = 0; k < 12; k++) {
+                            if(isProductionBuilding(playerArr[playerTraderIndex].buildingCardsArr[k]) && playerArr[playerTraderIndex].goodsCardsArr[k].cardName != -1) {
+                                //there must be a production building with a good
+                                printf("%d - %20s sell price: %d\n", k, buildingStr[playerArr[playerTraderIndex].buildingCardsArr[k].cardName], getGoodPrice(currPrices, playerArr[playerTraderIndex].buildingCardsArr[k].cardName));
+                            }
+                        }
+                        printf("__________________\n");
+                        printf("enter index good to sell input -1 to not sell anything: ");
+                        scanf("%d", &goodToSellIndex);
+                        
+                        if(goodToSellIndex != -1) {
+                            sellGood(&playerArr[playerTraderIndex], &mainDeck, &discardDeck, currPrices, playerArr[playerTraderIndex].buildingCardsArr[goodToSellIndex].cardName, goodToSellIndex);
+                        }
+                        noOfGoodsCanTrade--;
+                    }
+                }
             } else if(0) {
                 //councillor role
             } else if(playerArr[playerArrIndex].currRole == prospector) {
                 //prospector role
                 drawCard(&playerArr[playerArrIndex], 1, &mainDeck);
             }
+            
+            //game ends if any player has built 12 buildings
+            for(size_t j = 0; j < noOfPlayers; j++) {
+                if(playerArr[j].buildingCardsArr[11].cardName != -1) {
+                    //just check if the last building is not empty
+                    //since building are built from starting from index 0
+                    gameOver = 1;
+                    break;
+                }
+            }
         }
         
-        //printf("governor: %d\n", governor);
         
         turnCounter++;
     }
+    
+    //game over count scores
+    printf("___game over___\n");
+    int highestScore = 0;
+    int winnerIndex = -1;
+    for(int i = 0; i < noOfPlayers; i++) {
+        int totalVp = 0;
+        
+        for(size_t j = 0; j < 12; j++) {
+            if(playerArr[i].buildingCardsArr[j].cardName != -1) {
+                totalVp += playerArr[i].buildingCardsArr[j].victoryPoint;
+            }
+        }
+        printf("player %d total vp: %d\n", i, totalVp);
+        //calculate winner by finding out the highest score
+        if(totalVp >= highestScore) {
+            highestScore = totalVp;
+            winnerIndex = i;
+        }
+    }
+    printf("___\\congrats/___\n");
+    printf("player %d is the winner!!!\n", winnerIndex);
     
     return;
 }

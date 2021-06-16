@@ -73,5 +73,7 @@ void setTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 void rotateTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding);
+card popGoodFromPlayer(player *player1, int index);
+void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index);
 
 #endif /* player_h */

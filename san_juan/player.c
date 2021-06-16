@@ -291,3 +291,26 @@ int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding
     //return 0 if failed (building parameter was not a production building)
     return price;
 }
+
+card popGoodFromPlayer(player *player1, int index) {
+    card result;
+    initCard(&result);
+    
+    result = player1->goodsCardsArr[index];
+    initCard(&player1->goodsCardsArr[index]);
+    return result;
+}
+
+void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index) {
+    //sells only one good at a time
+    //call this function multiple times to sell multiple goods
+    int currPrice = getGoodPrice(tradingHouseTile1, productionBuilding);
+    //reomve the good from the goods card array
+    //add card to discard deck
+    card temp;
+    initCard(&temp);
+    temp = popGoodFromPlayer(player1, index);
+    addToDeck(discardDeck, temp);
+    //draw as many cards as the price
+    drawCard(player1, currPrice, mainDeck);
+}
