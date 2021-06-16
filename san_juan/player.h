@@ -57,6 +57,7 @@ void initAllPlayers(player *playerArr, uint8_t noOfPlayers);
 int getEmptyHandIndex(player player1);
 void printPlayerHand(player player1);
 void drawCard(player *player1, size_t noOfCards, deck *deck1);
+void discardCard(player *player1, deck *discardDeck, int index);
 void setRole(player *player1, roleType newRole);
 void setRoleDeck(roleDeck *roleDeck1);
 int drawFromRoleDeck(roleDeck *roleDeck1, roleType drawRole); //returns -1 when search fails

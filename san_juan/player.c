@@ -71,6 +71,11 @@ void drawCard(player *player1, size_t noOfCards, deck *deck1) {
     cleanUpCardArr(deck1->cardArr);
 }
 
+void discardCard(player *player1, deck *discardDeck, int index) {
+    card temp = popCardFromHand(player1, player1->hand[index].cardName);
+    addToDeck(discardDeck, temp);
+}
+
 void setRole(player *player1, roleType newRole) {
     player1->currRole = newRole;
 }
@@ -105,6 +110,7 @@ card popCardFromHand(player *player1, building choosenBuilding) {
             result = player1->hand[i];
             initCard(&player1->hand[i]);
             cleanUpCardArr(player1->hand);
+            break;
         }
     }
     

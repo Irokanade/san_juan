@@ -12,8 +12,6 @@
 
 #include "player.h"
 
-#define strBuff 129
-
 void titleScreen(void);
 void sanJuanGame(int);
 
@@ -151,8 +149,6 @@ void sanJuanGame(int noOfPlayers) {
                         
                         while(discardCost > 0) {
                             int discardChoice = -1;
-                            card discardCard;
-                            initCard(&discardCard);
                             
                             printf("___choose cards to discard___\n");
                             printf("___cards to discard %d___\n", discardCost);
@@ -160,8 +156,7 @@ void sanJuanGame(int noOfPlayers) {
                             printf("__________________\n");
                             printf("enter card to discard: ");
                             scanf(" %d", &discardChoice);
-                            discardCard = popCardFromHand(&playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[discardChoice].cardName);
-                            addToDeck(&discardDeck, discardCard);
+                            discardCard(&playerArr[playerBuildIndex], &discardDeck, discardChoice);
                             discardCost--;
                         }
                         
@@ -261,24 +256,64 @@ void sanJuanGame(int noOfPlayers) {
                         noOfGoodsCanTrade--;
                     }
                 }
-            } else if(0) {
+            } else if(playerArr[playerArrIndex].currRole == councillor) {
                 //councillor role
+                //everybody draws 2 cards and discards 1 staring from the player who chose councillor role
+                //The player with councillor role draws 5 cards discards 4 cards
+                int playerCouncillorIndex = playerArrIndex;
+                for(int j = 0; j < noOfPlayers; j++) {
+                    playerCouncillorIndex = playerArrIndex+j;
+                    
+                    if(playerCouncillorIndex >= noOfPlayers) {
+                        playerCouncillorIndex -= noOfPlayers;
+                    }
+                    
+                    int noOfCardsToDraw = 2; //defaults to 2
+                    //deal with councillor role
+                    if(playerArr[playerCouncillorIndex].currRole == councillor) {
+                        noOfCardsToDraw = 5;
+                    }
+                    //get the index of the original hand size
+                    int originalHandSize = getHandSize(playerArr[playerCouncillorIndex]);
+                    //draw the cards first
+                    drawCard(&playerArr[playerCouncillorIndex], noOfCardsToDraw, &mainDeck);
+                    //then print the cards
+                    printPlayerHand(playerArr[playerCouncillorIndex]);
+                    //then you discard cards
+                    int noOfCardsToDiscard = 0;
+                    noOfCardsToDiscard = noOfCardsToDraw - 1; //discard until one card left
+                    while(noOfCardsToDiscard > 0) {
+                        int discardCardsIndex = -1;
+                        printf("___choose cards to discard___\n");
+                        printf("___cards to discard %d___\n", noOfCardsToDiscard);
+                        for(int k = 0; k < noOfCardsToDraw; k++) {
+                            int newCardIndex = originalHandSize + k;
+                            if(playerArr[playerCouncillorIndex].hand[newCardIndex].cardName != -1) {
+                                printf("%d - %20s cost: %d vp: %d\n", newCardIndex, buildingStr[playerArr[playerCouncillorIndex].hand[newCardIndex].cardName], playerArr[playerCouncillorIndex].hand[newCardIndex].cost, playerArr[playerCouncillorIndex].hand[newCardIndex].victoryPoint);
+                            }
+                        }
+                        printf("__________________\n");
+                        printf("enter index of hand to discard: ");
+                        scanf("%d", &discardCardsIndex);
+                        discardCard(&playerArr[playerCouncillorIndex], &discardDeck, discardCardsIndex);
+                        noOfCardsToDiscard--;
+                    }
+                }
             } else if(playerArr[playerArrIndex].currRole == prospector) {
                 //prospector role
                 drawCard(&playerArr[playerArrIndex], 1, &mainDeck);
             }
-            
-            //game ends if any player has built 12 buildings
-            for(size_t j = 0; j < noOfPlayers; j++) {
-                if(playerArr[j].buildingCardsArr[11].cardName != -1) {
-                    //just check if the last building is not empty
-                    //since building are built from starting from index 0
-                    gameOver = 1;
-                    break;
-                }
-            }
         }
         
+        //game ends if any player has built 12 buildings
+        for(size_t i = 0; i < noOfPlayers; i++) {
+            if(playerArr[i].buildingCardsArr[11].cardName != -1) {
+                //just check if the last building is not empty
+                //since building are built from starting from index 0
+                gameOver = 1;
+                break;
+            }
+        }
         
         turnCounter++;
     }
