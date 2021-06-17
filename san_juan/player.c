@@ -10,6 +10,7 @@
 void initPlayer(player *player1) {
     player1->currGov = 0;
     player1->currRole = -1;
+    player1->isBot = 0;
     
     //init hand
     for(size_t i = 0; i < 110; i++) {
@@ -25,6 +26,10 @@ void initPlayer(player *player1) {
     for(size_t i = 0; i < 12; i++) {
         initCard(&player1->goodsCardsArr[i]);
     }
+}
+
+void setPlayerBot(player *player1) {
+    player1->isBot = 1; //set isBot to true
 }
 
 void initAllPlayers(player *playerArr, uint8_t noOfPlayers) {
@@ -319,4 +324,25 @@ void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTi
     addToDeck(discardDeck, temp);
     //draw as many cards as the price
     drawCard(player1, currPrice, mainDeck);
+}
+
+void printPlayerGoods(player player1) {
+    for(int i = 0; i < 12; i++) {
+        if(player1.goodsCardsArr[i].cardName != -1) {
+            printf("%d - %s good\n", i, buildingStr[player1.buildingCardsArr[i].cardName]);
+        }
+    }
+}
+
+int getCurrTotalVP(player player1) {
+    int totalVp = 0;
+    for(int i = 0; i < 12; i++) {
+        totalVp += player1.buildingCardsArr[i].victoryPoint;
+    }
+    
+    return totalVp;
+}
+
+void printPlayerCurrTotalVP(player player1) {
+    printf("current vp: %d\n", getCurrTotalVP(player1));
 }

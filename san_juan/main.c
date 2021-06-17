@@ -12,28 +12,44 @@
 
 #include "player.h"
 
-void titleScreen(void);
-void sanJuanGame(int);
+void titleScreen(int *noOfPlayers, int *noOfBots);
+void sanJuanGame(int noOfPlayers, int noOfBots);
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    titleScreen();
-    sanJuanGame(3);
+    int noOfPlayers = 0;
+    int noOfBots = 0;
+    titleScreen(&noOfPlayers, &noOfBots);
+    sanJuanGame(noOfPlayers, noOfBots);
     return 0;
 }
 
-void titleScreen() {
+void titleScreen(int *noOfPlayers, int *noOfBots) {
     printf("San juan\n");
     printf("Base game edition\n");
+    printf("Choose number of players (2-4): ");
+    scanf(" %d", noOfPlayers);
+    while(*noOfPlayers > 4 || *noOfPlayers < 2) {
+        printf("There can be only minimum of 2 players or maximum of 4 players\n");
+        printf("Choose number of players (2-4)\n");
+        scanf(" %d", noOfPlayers);
+    }
+    printf("Choose number of bots (0-3): ");
+    scanf(" %d", noOfBots);
+    while(*noOfBots > 3 || *noOfBots < 0) {
+        printf("There can only be minimum of 0 bots or maximum of 3 bots\n");
+        printf("Choose number of bots (0-3): ");
+        scanf(" %d", noOfBots);
+    }
 }
 
-void sanJuanGame(int noOfPlayers) {
+void sanJuanGame(int noOfPlayers, int noOfBots) {
     player playerArr[noOfPlayers];
     deck mainDeck;
     deck discardDeck;
     size_t turnCounter = 0; //turn counter starts from 0
     int gameOver = 0;
     tradingHouseTileDeck tradingHouseMainDeck;
+    srand((unsigned int)time(0)); //init random
     
     initDeck(&mainDeck, 110);
     initDeck(&discardDeck, 110);
@@ -51,6 +67,11 @@ void sanJuanGame(int noOfPlayers) {
     
     //initialize all players
     initAllPlayers(playerArr, noOfPlayers);
+    //set bots
+    for(int i = 0; i < noOfBots; i++) {
+        int botIndex = i+(noOfPlayers-noOfBots);
+        setPlayerBot(&playerArr[botIndex]);
+    }
     
     for(size_t i = 0; i < noOfPlayers; i++) {
         //draw 4 cards as starting hand
@@ -75,8 +96,10 @@ void sanJuanGame(int noOfPlayers) {
         }
         
         int governor = turnCounter%noOfPlayers;
-        printf("palyer %d is now the governor\n", governor);
-        
+        printf("\n\n");
+        printf("turn %zu\n", turnCounter);
+        printf("player %d is now the governor\n", governor);
+        printf("\n\n");
         //set roles starting from govenor
         for(int i = 0; i < noOfPlayers; i++) {
             int playerArrIndex = governor+i;
@@ -87,24 +110,66 @@ void sanJuanGame(int noOfPlayers) {
             
             //need to choose role
             int roleChoice = -1;
-            while(roleChoice < 0 || roleChoice > 4) {
-                printf("player %d choose a role\n", playerArrIndex);
-                for(int i = 0; i < 5; i++) {
-                    if(roleMainDeck.roleArr[i] != nullRole) {
-                        printf("%1d - %s\n", i, roleTypeStr[i]);
-                    } else {
-                        printf("%s already chosen\n", roleTypeStr[i]);
+            //let player choose role
+            if(!playerArr[playerArrIndex].isBot) {
+                //if player print player hand and buildings and goods
+                if(!playerArr[playerArrIndex].isBot) {
+                    
+                    //print all of players information
+                    printf("______player %d hand______\n", playerArrIndex);
+                    printPlayerHand(playerArr[playerArrIndex]);
+                    printf("______player %d buildings ______\n", playerArrIndex);
+                    printPlayerBuildings(playerArr[playerArrIndex]);
+                    printf("______player %d goods______\n", playerArrIndex);
+                    printPlayerGoods(playerArr[playerArrIndex]);
+                    printf("______player %d vp______\n", playerArrIndex);
+                    printPlayerCurrTotalVP(playerArr[playerArrIndex]);
+                    printf("________________________\n");
+                    
+                    //print players competitors information (goods and buildings and hand size)
+                    for(int j = 0; j < noOfPlayers; j++) {
+                        int printPlayerInfoIndex = j+playerArrIndex;
+                        if(printPlayerInfoIndex >= noOfPlayers) {
+                            printPlayerInfoIndex -= noOfPlayers;
+                        }
+                        printf("\n");
+                        printf("______player %d handsize______\n", printPlayerInfoIndex);
+                        printf("hand size: %d\n", getHandSize(playerArr[printPlayerInfoIndex]));
+                        printf("______player %d buildings ______\n", printPlayerInfoIndex);
+                        printPlayerBuildings(playerArr[printPlayerInfoIndex]);
+                        printf("______player %d goods______\n", printPlayerInfoIndex);
+                        printPlayerGoods(playerArr[printPlayerInfoIndex]);
+                        printf("______player %d vp______\n", printPlayerInfoIndex);
+                        printPlayerCurrTotalVP(playerArr[printPlayerInfoIndex]);
+                        printf("________________________\n");
+                        printf("\n");
                     }
                 }
-                printf("choice: ");
-                scanf(" %d", &roleChoice);
-                if(drawFromRoleDeck(&roleMainDeck, roleChoice) == -1) {
-                    printf("%s already chosen >:[\n", roleTypeStr[roleChoice]);
-                    puts("choose again");
-                    roleChoice = -1;
+                
+                while(roleChoice < 0 || roleChoice > 4) {
+                    printf("player %d choose a role\n", playerArrIndex);
+                    for(int i = 0; i < 5; i++) {
+                        if(roleMainDeck.roleArr[i] != nullRole) {
+                            printf("%1d - %s\n", i, roleTypeStr[i]);
+                        } else {
+                            printf("%s already chosen\n", roleTypeStr[i]);
+                        }
+                    }
+                    printf("choice: ");
+                    scanf(" %d", &roleChoice);
+                    if(drawFromRoleDeck(&roleMainDeck, roleChoice) == -1) {
+                        printf("%s already chosen >:[\n", roleTypeStr[roleChoice]);
+                        puts("choose again");
+                        roleChoice = -1;
+                    }
                 }
+                printf("you have choosen %s role\n", roleTypeStr[roleChoice]);
+            } else {
+                //choose random role for the bot
+                roleChoice = rand()%5; //random choice from 0 to 4
+                printf("bot player %d has choosen %s role\n", playerArrIndex, roleTypeStr[roleChoice]);
             }
-            printf("you have choosen %s role\n", roleTypeStr[roleChoice]);
+            
             setRole(&playerArr[playerArrIndex], roleChoice);
             //printf("playerArrIndex: %d\n", playerArrIndex);
             
@@ -120,21 +185,40 @@ void sanJuanGame(int noOfPlayers) {
                         playerBuildIndex -= noOfPlayers;
                     }
                     
-                    int buildChoice = 0;
-                    printf("player %d build\n", playerBuildIndex);
-                    printf("___player %d hand___\n", playerBuildIndex);
-                    for(int k = 0; k < 110; k++) {
-                        if(playerArr[playerBuildIndex].hand[k].cardName == -1) {
-                            break;
-                        } else if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k]) != -1) {
-                            printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
-                        } else {
-                            printf("not enoungh cards to build %20s cost: %d vp: %d\n", buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                    int buildChoice = -1; //initialize to build nothing
+                    //if player is not bot
+                    if(!playerArr[playerBuildIndex].isBot) {
+                        //let human player choose what to build
+                        printf("player %d build\n", playerBuildIndex);
+                        printf("___player %d hand___\n", playerBuildIndex);
+                        for(int k = 0; k < 110; k++) {
+                            if(playerArr[playerBuildIndex].hand[k].cardName == -1) {
+                                break;
+                            } else if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k]) != -1) {
+                                printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                            } else {
+                                printf("not enoungh cards to build %20s cost: %d vp: %d\n", buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                            }
+                        }
+                        printf("__________________\n");
+                        printf("enter card to build (enter -1 to not build): ");
+                        scanf(" %d", &buildChoice);
+                    } else {
+                        //bot builds the first card it could build from its hand
+                        int botBuilds = 0;
+                        for(int k = 0; k < 110; k++) {
+                            if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k])) {
+                                buildChoice = k;
+                                botBuilds = 1;
+                                printf("bot player %d builds %s\n", playerBuildIndex, buildingStr[playerArr[playerBuildIndex].hand[k].cardName]);
+                                break;
+                            }
+                        }
+                        if(!botBuilds) {
+                            printf("bot player %d builds nothing\n", playerBuildIndex);
+                            buildChoice = -1; //if not enough to build anything build nothing
                         }
                     }
-                    printf("__________________\n");
-                    printf("enter card to build (enter -1 to not build): ");
-                    scanf(" %d", &buildChoice);
                     
                     if(buildChoice != -1) {
                         //discard cards for cost
@@ -150,13 +234,19 @@ void sanJuanGame(int noOfPlayers) {
                         while(discardCost > 0) {
                             int discardChoice = -1;
                             
-                            printf("___choose cards to discard___\n");
-                            printf("___cards to discard %d___\n", discardCost);
-                            printPlayerHand(playerArr[playerBuildIndex]);
-                            printf("__________________\n");
-                            printf("enter card to discard: ");
-                            scanf(" %d", &discardChoice);
-                            discardCard(&playerArr[playerBuildIndex], &discardDeck, discardChoice);
+                            //let human player choose what to discard
+                            if(!playerArr[playerBuildIndex].isBot) {
+                                printf("___choose cards to discard___\n");
+                                printf("___cards to discard %d___\n", discardCost);
+                                printPlayerHand(playerArr[playerBuildIndex]);
+                                printf("__________________\n");
+                                printf("enter card to discard: ");
+                                scanf(" %d", &discardChoice);
+                                discardCard(&playerArr[playerBuildIndex], &discardDeck, discardChoice);
+                            } else {
+                                //bot discards whatever it could discard
+                                discardCard(&playerArr[playerBuildIndex], &discardDeck, 0);
+                            }
                             discardCost--;
                         }
                         
@@ -193,20 +283,40 @@ void sanJuanGame(int noOfPlayers) {
                     while(noOfGoodCanProduce > 0) {
                         int produceIndex = -1; //index where good will be produced
                         printf("player %d produce\n", playerProduceIndex);
-                        printf("___player %d choose building to produce___\n", playerProduceIndex);
-                        for(int k = 0; k < 12; k++) {
-                            if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
-                                if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
-                                    //there is no good under the production building
-                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
-                                } else {
-                                    printf("already has good %20s cost: %d vp: %d\n", buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
+                        
+                        //let human player choose what to produce
+                        if(!playerArr[playerProduceIndex].isBot) {
+                            printf("___player %d choose building to produce___\n", playerProduceIndex);
+                            for(int k = 0; k < 12; k++) {
+                                if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
+                                    if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
+                                        //there is no good under the production building
+                                        printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
+                                    } else {
+                                        printf("already has good %20s cost: %d vp: %d\n", buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName], playerArr[playerProduceIndex].buildingCardsArr[k].cost, playerArr[playerProduceIndex].buildingCardsArr[k].victoryPoint);
+                                    }
                                 }
                             }
+                            printf("__________________\n");
+                            printf("enter good to produce enter -1 to not produce good: ");
+                            scanf(" %d", &produceIndex);
+                        } else {
+                            //bot produces whatever it could produce
+                            int botProduces = 0;
+                            for(int k = 0; k < 12; k++) {
+                                if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
+                                    produceIndex = k;
+                                    botProduces = 1;
+                                    printf("bot player %d produces %s good\n", playerProduceIndex, buildingStr[playerArr[playerProduceIndex].hand[k].cardName]);
+                                    break;
+                                }
+                            }
+                            if(!botProduces) {
+                                printf("bot player %d does not produce anything\n", playerProduceIndex);
+                                produceIndex = -1;
+                            }
                         }
-                        printf("__________________\n");
-                        printf("enter good to produce enter -1 to not produce good: ");
-                        scanf(" %d", &produceIndex);
+                        
                         
                         if(produceIndex != -1) {
                             produceGoods(&playerArr[playerProduceIndex], produceIndex, &mainDeck);
@@ -239,16 +349,37 @@ void sanJuanGame(int noOfPlayers) {
                     while(noOfGoodsCanTrade) {
                         int goodToSellIndex = -1; //index of which good to be sold
                         printf("player %d sell\n", playerTraderIndex);
-                        printf("___player %d choose good to sell___\n", playerTraderIndex);
-                        for(int k = 0; k < 12; k++) {
-                            if(isProductionBuilding(playerArr[playerTraderIndex].buildingCardsArr[k]) && playerArr[playerTraderIndex].goodsCardsArr[k].cardName != -1) {
-                                //there must be a production building with a good
-                                printf("%d - %20s sell price: %d\n", k, buildingStr[playerArr[playerTraderIndex].buildingCardsArr[k].cardName], getGoodPrice(currPrices, playerArr[playerTraderIndex].buildingCardsArr[k].cardName));
+                        
+                        //let human player choose what to sell
+                        if(!playerArr[playerTraderIndex].isBot) {
+                            printf("___player %d choose good to sell___\n", playerTraderIndex);
+                            for(int k = 0; k < 12; k++) {
+                                if(isProductionBuilding(playerArr[playerTraderIndex].buildingCardsArr[k]) && playerArr[playerTraderIndex].goodsCardsArr[k].cardName != -1) {
+                                    //there must be a production building with a good
+                                    printf("%d - %20s sell price: %d\n", k, buildingStr[playerArr[playerTraderIndex].buildingCardsArr[k].cardName], getGoodPrice(currPrices, playerArr[playerTraderIndex].buildingCardsArr[k].cardName));
+                                }
+                            }
+                            printf("__________________\n");
+                            printf("enter index good to sell input -1 to not sell anything: ");
+                            scanf("%d", &goodToSellIndex);
+                        } else {
+                            //bot trades whatever it could trade
+                            int botSell = 0;
+                            for(int k = 0; k < 12; k++) {
+                                if(isProductionBuilding(playerArr[playerTraderIndex].buildingCardsArr[k]) && playerArr[playerTraderIndex].goodsCardsArr[k].cardName != -1) {
+                                    //there must be a production building with a good
+                                    goodToSellIndex = k;
+                                    botSell = 1;
+                                    printf("bot player %d sells %s good\n", playerTraderIndex, buildingStr[playerArr[playerTraderIndex].hand[k].cardName]);
+                                    break;
+                                }
+                            }
+                            if(!botSell) {
+                                goodToSellIndex = -1;
+                                printf("bot player %d does not sell anything\n", playerTraderIndex);
                             }
                         }
-                        printf("__________________\n");
-                        printf("enter index good to sell input -1 to not sell anything: ");
-                        scanf("%d", &goodToSellIndex);
+                        
                         
                         if(goodToSellIndex != -1) {
                             sellGood(&playerArr[playerTraderIndex], &mainDeck, &discardDeck, currPrices, playerArr[playerTraderIndex].buildingCardsArr[goodToSellIndex].cardName, goodToSellIndex);
@@ -278,24 +409,31 @@ void sanJuanGame(int noOfPlayers) {
                     //draw the cards first
                     drawCard(&playerArr[playerCouncillorIndex], noOfCardsToDraw, &mainDeck);
                     //then print the cards
-                    printPlayerHand(playerArr[playerCouncillorIndex]);
+                    //printPlayerHand(playerArr[playerCouncillorIndex]);
                     //then you discard cards
                     int noOfCardsToDiscard = 0;
                     noOfCardsToDiscard = noOfCardsToDraw - 1; //discard until one card left
                     while(noOfCardsToDiscard > 0) {
                         int discardCardsIndex = -1;
-                        printf("___choose cards to discard___\n");
-                        printf("___cards to discard %d___\n", noOfCardsToDiscard);
-                        for(int k = 0; k < noOfCardsToDraw; k++) {
-                            int newCardIndex = originalHandSize + k;
-                            if(playerArr[playerCouncillorIndex].hand[newCardIndex].cardName != -1) {
-                                printf("%d - %20s cost: %d vp: %d\n", newCardIndex, buildingStr[playerArr[playerCouncillorIndex].hand[newCardIndex].cardName], playerArr[playerCouncillorIndex].hand[newCardIndex].cost, playerArr[playerCouncillorIndex].hand[newCardIndex].victoryPoint);
+                        
+                        //let human player choose what to discard
+                        if(!playerArr[playerCouncillorIndex].isBot) {
+                            printf("___choose cards to discard___\n");
+                            printf("___cards to discard %d___\n", noOfCardsToDiscard);
+                            for(int k = 0; k < noOfCardsToDraw; k++) {
+                                int newCardIndex = originalHandSize + k;
+                                if(playerArr[playerCouncillorIndex].hand[newCardIndex].cardName != -1) {
+                                    printf("%d - %20s cost: %d vp: %d\n", newCardIndex, buildingStr[playerArr[playerCouncillorIndex].hand[newCardIndex].cardName], playerArr[playerCouncillorIndex].hand[newCardIndex].cost, playerArr[playerCouncillorIndex].hand[newCardIndex].victoryPoint);
+                                }
                             }
+                            printf("__________________\n");
+                            printf("enter index of hand to discard: ");
+                            scanf("%d", &discardCardsIndex);
+                            discardCard(&playerArr[playerCouncillorIndex], &discardDeck, discardCardsIndex);
+                        } else {
+                            //bot discard the first card
+                            discardCard(&playerArr[playerCouncillorIndex], &discardDeck, originalHandSize);
                         }
-                        printf("__________________\n");
-                        printf("enter index of hand to discard: ");
-                        scanf("%d", &discardCardsIndex);
-                        discardCard(&playerArr[playerCouncillorIndex], &discardDeck, discardCardsIndex);
                         noOfCardsToDiscard--;
                     }
                 }
@@ -324,12 +462,12 @@ void sanJuanGame(int noOfPlayers) {
     int winnerIndex = -1;
     for(int i = 0; i < noOfPlayers; i++) {
         int totalVp = 0;
-        
-        for(size_t j = 0; j < 12; j++) {
+        totalVp = getCurrTotalVP(playerArr[i]);
+        /*for(size_t j = 0; j < 12; j++) {
             if(playerArr[i].buildingCardsArr[j].cardName != -1) {
                 totalVp += playerArr[i].buildingCardsArr[j].victoryPoint;
             }
-        }
+        }*/
         printf("player %d total vp: %d\n", i, totalVp);
         //calculate winner by finding out the highest score
         if(totalVp >= highestScore) {

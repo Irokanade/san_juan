@@ -50,9 +50,11 @@ typedef struct _player {
     card goodsCardsArr[12]; //good has the same index as the production building that produced it
     roleType currRole;
     uint8_t currGov;
+    uint8_t isBot; //bool indicating wether player is bot
 } player;
 
 void initPlayer(player *player1);
+void setPlayerBot(player *player1);
 void initAllPlayers(player *playerArr, uint8_t noOfPlayers);
 int getEmptyHandIndex(player player1);
 void printPlayerHand(player player1);
@@ -76,5 +78,8 @@ tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileD
 int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding);
 card popGoodFromPlayer(player *player1, int index);
 void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index);
+void printPlayerGoods(player player1);
+int getCurrTotalVP(player player1);
+void printPlayerCurrTotalVP(player player1);
 
 #endif /* player_h */
