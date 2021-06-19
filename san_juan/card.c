@@ -116,6 +116,11 @@ void setCard(card *card1) {
     } else if(card1->cardName == hero) {
         card1->victoryPoint =  5;
     }
+    
+    //city hall, guild hall, palace, triumphal arch have no base vp
+    if(card1->cardName >= cityHall && card1->cardName <= triumphalArch) {
+        card1->victoryPoint = 0;
+    }
 }
 
 void setCardArr(card *cardArr, size_t size, building setBuilding) {
@@ -228,6 +233,14 @@ int addToDeck(deck *deck1, card newCard) {
 
 int isProductionBuilding(card card1) {
     if(card1.cardName>=indigoPlant && card1.cardName<=silverSmelter) {
+        return 1;
+    }
+    
+    return 0;
+}
+
+int isVioletBuilding(card card1) {
+    if(card1.cardName>=archive && card1.cardName<=triumphalArch) {
         return 1;
     }
     

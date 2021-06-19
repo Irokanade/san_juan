@@ -5,8 +5,7 @@
 //  Created by michaelleong on 12/06/2021.
 //
 
-#ifndef card_h
-#define card_h
+#pragma once
 
 #include <stdio.h>
 #include <stdint.h>
@@ -109,5 +108,4 @@ int getTopDeckIndex(deck deck1);
 card popFromTopDeck(deck *deck1);;
 int addToDeck(deck *deck1, card newCard);
 int isProductionBuilding(card card1);
-
-#endif /* card_h */
+int isVioletBuilding(card card1);

@@ -144,21 +144,47 @@ int getHandSize(player player1) {
     return size; //return handsize
 }
 
-int sufficientCostToBuild(player player1, card newBuilding) {
+int cardsRemainingToBuild(player player1, card newBuilding) {
     int cost = 0; //cost to build
     int newSize = 0; //number of cards minus the card to build
     cost = newBuilding.cost;
+    int difference = 0;
     
     //check if player is builder role
     //builder role pay 1 card less
     if(player1.currRole == builder) {
         cost--;
+        //library reduces building cost by 1 if player is builder
+        if(searchPlayerBuilding(player1, library)) {
+            cost--;
+        }
     }
+    
+    //smithy card reduces production building cost by 1
+    if(searchPlayerBuilding(player1, smithy)) {
+        if(isProductionBuilding(newBuilding)) {
+            cost--;
+        }
+    }
+    
+    //quarry reduces violet buildings cost by 1
+    if(searchPlayerBuilding(player1, quarry)) {
+        if(isVioletBuilding(newBuilding)) {
+            cost--;
+        }
+    }
+    
+    
     
     popCardFromHand(&player1, newBuilding.cardName);
     newSize = getHandSize(player1);
     
-    if(newSize >= cost) {
+    difference = newSize - cost;
+    return difference; //if difference >= 0 then sufficient cost
+}
+
+int sufficientCostToBuild(player player1, card newBuilding) {
+    if(cardsRemainingToBuild(player1, newBuilding) >= 0) {
         return 1;
     }
     
@@ -312,6 +338,14 @@ card popGoodFromPlayer(player *player1, int index) {
     return result;
 }
 
+void discardGood(player *player1, int index, deck *discardDeck) {
+    card discardedGood;
+    initCard(&discardedGood);
+    
+    discardedGood = popGoodFromPlayer(player1, index);
+    addToDeck(discardDeck, discardedGood);
+}
+
 void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index) {
     //sells only one good at a time
     //call this function multiple times to sell multiple goods
@@ -345,4 +379,28 @@ int getCurrTotalVP(player player1) {
 
 void printPlayerCurrTotalVP(player player1) {
     printf("current vp: %d\n", getCurrTotalVP(player1));
+}
+
+int searchPlayerBuilding(player player1, building searchBuilding) {
+    int found = 0;
+    for(int i = 0; i < 12; i++) {
+        if(player1.buildingCardsArr[i].cardName == searchBuilding) {
+            found = 1;
+            break;
+        }
+    }
+    
+    return found;
+}
+
+int deckSize(deck deck1) {
+    int size = 0;
+    
+    for(size_t i = 0; i < 110; i++) {
+        if(deck1.cardArr[i].cardName != -1) {
+            size++;
+        }
+    }
+    
+    return size;
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E615F846267B7EBB00058E22 /* violetCards.c in Sources */ = {isa = PBXBuildFile; fileRef = E615F845267B7EBB00058E22 /* violetCards.c */; };
 		E65FDC6C2674EC5500B67C4F /* card.c in Sources */ = {isa = PBXBuildFile; fileRef = E65FDC6B2674EC5500B67C4F /* card.c */; };
 		E65FDC6F26750B5D00B67C4F /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = E65FDC6E26750B5D00B67C4F /* player.c */; };
 		E65FDC7226773C6B00B67C4F /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = E65FDC7126773C6B00B67C4F /* Makefile */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E615F844267B7EBB00058E22 /* violetCards.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = violetCards.h; sourceTree = "<group>"; };
+		E615F845267B7EBB00058E22 /* violetCards.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = violetCards.c; sourceTree = "<group>"; };
 		E65FDC6A2674EC5500B67C4F /* card.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = card.h; sourceTree = "<group>"; };
 		E65FDC6B2674EC5500B67C4F /* card.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = card.c; sourceTree = "<group>"; };
 		E65FDC6D26750B5D00B67C4F /* player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
@@ -71,6 +74,8 @@
 				E65FDC6D26750B5D00B67C4F /* player.h */,
 				E65FDC6E26750B5D00B67C4F /* player.c */,
 				E65FDC7126773C6B00B67C4F /* Makefile */,
+				E615F844267B7EBB00058E22 /* violetCards.h */,
+				E615F845267B7EBB00058E22 /* violetCards.c */,
 			);
 			path = san_juan;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E69296572654B8000068EA95 /* main.c in Sources */,
+				E615F846267B7EBB00058E22 /* violetCards.c in Sources */,
 				E65FDC6F26750B5D00B67C4F /* player.c in Sources */,
 				E65FDC7226773C6B00B67C4F /* Makefile in Sources */,
 				E65FDC6C2674EC5500B67C4F /* card.c in Sources */,

@@ -1,4 +1,4 @@
-all: player.o card.o
+all: player.o card.o violetCards.o
 	gcc *.o main.c -o main
 
 player.o:
@@ -6,6 +6,9 @@ player.o:
 
 card.o:
 	gcc -c card.c
+	
+violetCards.o:
+	gcc -c violetCards.c
 
 clean:
 	rm -f *.o main

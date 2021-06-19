@@ -5,8 +5,7 @@
 //  Created by michaelleong on 12/06/2021.
 //
 
-#ifndef player_h
-#define player_h
+#pragma once
 
 #include <stdio.h>
 #include "card.h"
@@ -66,6 +65,7 @@ int drawFromRoleDeck(roleDeck *roleDeck1, roleType drawRole); //returns -1 when 
 card popCardFromHand(player *player1, building chooseBuilding); //take a choosen card from hand
 int getEmptyBuildingSlotIndex(player player1);
 int getHandSize(player player1);
+int cardsRemainingToBuild(player player1, card newBuilding);
 int sufficientCostToBuild(player player1, card newBuilding);
 int buildBuildings(player *player1, card newBuilding); //build buildings
 void printPlayerBuildings(player player1);
@@ -77,9 +77,10 @@ void rotateTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding);
 card popGoodFromPlayer(player *player1, int index);
+void discardGood(player *player1, int index, deck *discardDeck);
 void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index);
 void printPlayerGoods(player player1);
 int getCurrTotalVP(player player1);
 void printPlayerCurrTotalVP(player player1);
-
-#endif /* player_h */
+int searchPlayerBuilding(player player1, building searchBuilding);
+int deckSize(deck deck1);
