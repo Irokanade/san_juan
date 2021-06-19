@@ -77,6 +77,7 @@ void rotateTradingHouseTileDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 tradingHouseTile popFromTradingHouseDeck(tradingHouseTileDeck *tradingHouseTileDeck1);
 int getGoodPrice(tradingHouseTile tradingHouseTile1, building productionBuilding);
 card popGoodFromPlayer(player *player1, int index);
+void printPrices(tradingHouseTile tradingHouseTile1);
 void discardGood(player *player1, int index, deck *discardDeck);
 void sellGood(player *player1, deck *mainDeck, deck *discardDeck, tradingHouseTile tradingHouseTile1, building productionBuilding, int index);
 void printPlayerGoods(player player1);
@@ -84,3 +85,4 @@ int getCurrTotalVP(player player1);
 void printPlayerCurrTotalVP(player player1);
 int searchPlayerBuilding(player player1, building searchBuilding);
 int deckSize(deck deck1);
+

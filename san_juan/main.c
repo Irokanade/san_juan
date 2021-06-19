@@ -523,10 +523,12 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                             int botProduces = 0;
                             for(int k = 0; k < 12; k++) {
                                 if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
-                                    produceIndex = k;
-                                    botProduces = 1;
-                                    printf("bot player %d produces %s good\n", playerProduceIndex, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName]);
-                                    break;
+                                    if(isProductionBuilding(playerArr[playerProduceIndex].buildingCardsArr[k])) {
+                                        produceIndex = k;
+                                        botProduces = 1;
+                                        printf("bot player %d produces %s good\n", playerProduceIndex, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName]);
+                                        break;
+                                    }
                                 }
                             }
                             if(!botProduces) {
@@ -556,6 +558,11 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                 //get the price first
                 tradingHouseTile currPrices;
                 currPrices = popFromTradingHouseDeck(&tradingHouseMainDeck);
+                
+                //print prices
+                printf("\n______Current prices______\n");
+                printPrices(currPrices);
+                printf("__________________________\n\n");
                 
                 //market stand and market hall variables
                 int noOfGoodsSold = 0;
@@ -608,7 +615,7 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                                     //there must be a production building with a good
                                     goodToSellIndex = k;
                                     botSell = 1;
-                                    printf("bot player %d sells %s good\n", playerTraderIndex, buildingStr[playerArr[playerTraderIndex].hand[k].cardName]);
+                                    printf("bot player %d sells %s good\n", playerTraderIndex, buildingStr[playerArr[playerTraderIndex].buildingCardsArr[k].cardName]);
                                     break;
                                 }
                             }

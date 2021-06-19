@@ -211,7 +211,7 @@ void printPlayerBuildings(player player1) {
         if(player1.buildingCardsArr[i].cardName == -1) {
             return;
         } else {
-            printf("%20s cost: %d vp: %d\n", buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint);
+            printf("%d - %20s cost: %d vp: %d\n", i, buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint);
         }
     }
 }
@@ -336,6 +336,14 @@ card popGoodFromPlayer(player *player1, int index) {
     result = player1->goodsCardsArr[index];
     initCard(&player1->goodsCardsArr[index]);
     return result;
+}
+
+void printPrices(tradingHouseTile tradingHouseTile1) {
+    printf("%20s: %d\n", "indigo plant good price", tradingHouseTile1.indigoPlantPrice);
+    printf("%20s: %d\n", "sugar mill good price", tradingHouseTile1.sugarMillPrice);
+    printf("%20s: %d\n", "tabacco storage good price", tradingHouseTile1.tobaccoStoragePrice);
+    printf("%20s: %d\n", "coffee roaster good price", tradingHouseTile1.coffeRoasterPrice);
+    printf("%20s: %d\n", "silver smelter good price", tradingHouseTile1.silverSmelterPrice);
 }
 
 void discardGood(player *player1, int index, deck *discardDeck) {
