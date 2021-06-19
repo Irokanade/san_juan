@@ -180,6 +180,7 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
             if(deckSize(mainDeck) <= 0) {
                 //if deck empty reset deck
                 setDeck(&mainDeck);
+                shuffleDeck(&mainDeck, 110);
             }
             
             //need to choose role
