@@ -187,7 +187,9 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
             //let player choose role
             if(!playerArr[playerArrIndex].isBot) {
                 //if player print player hand and buildings and goods
-                if(!playerArr[playerArrIndex].isBot) {
+                if(1) {
+                    // !playerArr[playerArrIndex].isBot
+                    //print every turn
                     
                     //print all of players information
                     printf("______player %d hand______\n", playerArrIndex);

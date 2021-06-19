@@ -36,7 +36,7 @@ void goldmineFunc(player *player1, deck *mainDeck, deck *discardDeck) {
             int discardCardIndex = -1;
             if(!player1->isBot) {
                 //let human player choose what to discard
-                printf("Choose %d card(s) to discard\n", j);
+                printf("Choose %d card(s) to discard\n", 3-j);
                 for(int i = 0; i < 4; i++) {
                     printf("%d - %20s cost: %d vp: %d\n", originalHandSize+i, buildingStr[player1->hand[originalHandSize+i].cardName], player1->hand[originalHandSize+i].cost, player1->hand[originalHandSize+i].victoryPoint);
                 }
