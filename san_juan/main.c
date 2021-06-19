@@ -316,7 +316,7 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                         //bot builds the first card it could build from its hand
                         int botBuilds = 0;
                         for(int k = 0; k < 110; k++) {
-                            if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k])) {
+                            if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k]) != -1) {
                                 buildChoice = k;
                                 botBuilds = 1;
                                 printf("bot player %d builds %s\n", playerBuildIndex, buildingStr[playerArr[playerBuildIndex].hand[k].cardName]);
