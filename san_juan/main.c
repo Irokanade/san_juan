@@ -240,7 +240,9 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                 printf("you have choosen %s role\n", roleTypeStr[roleChoice]);
             } else {
                 //choose random role for the bot
-                roleChoice = rand()%5; //random choice from 0 to 4
+                do {
+                    roleChoice = rand()%5; //random choice from 0 to 4
+                } while(drawFromRoleDeck(&roleMainDeck, roleChoice) == -1);
                 printf("bot player %d has choosen %s role\n", playerArrIndex, roleTypeStr[roleChoice]);
             }
             
@@ -523,7 +525,7 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                                 if(playerArr[playerProduceIndex].goodsCardsArr[k].cardName == -1) {
                                     produceIndex = k;
                                     botProduces = 1;
-                                    printf("bot player %d produces %s good\n", playerProduceIndex, buildingStr[playerArr[playerProduceIndex].hand[k].cardName]);
+                                    printf("bot player %d produces %s good\n", playerProduceIndex, buildingStr[playerArr[playerProduceIndex].buildingCardsArr[k].cardName]);
                                     break;
                                 }
                             }
@@ -710,6 +712,12 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                 if(searchPlayerBuilding(playerArr[playerArrIndex], library)) {
                     //library draw one more card from prospector role
                     drawCard(&playerArr[playerArrIndex], 1, &mainDeck);
+                }
+                
+                for(int k = 0; k < noOfPlayers; k++) {
+                    if(searchPlayerBuilding(playerArr[k], goldmine)) {
+                        goldmineFunc(&playerArr[k], &mainDeck, &discardDeck);
+                    }
                 }
             }
         }
