@@ -101,60 +101,33 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
         printf("turn %zu\n", turnCounter);
         printf("player %d is now the governor\n", governor);
         printf("\n\n");
-        //set roles starting from govenor
-        for(int i = 0; i < noOfPlayers; i++) {
-            int playerArrIndex = governor+i;
-            
-            if(playerArrIndex >= noOfPlayers) {
-                playerArrIndex -= noOfPlayers;
-            }
-            
-            //activate chapel before choosing roles
-            for(int j = 0; j < noOfPlayers; j++) {
-                if(searchPlayerBuilding(playerArr[j], chapel)) {
-                    if(!playerArr[j].isBot) {
-                        //let player choose what to add to chapel
-                        int cardToAddToChapel = -1;
-                        printf("___choose card to add to chapel input -1 to not add cards___\n");
-                        printPlayerHand(playerArr[j]);
-                        printf("__________________\n");
-                        scanf(" %d", &cardToAddToChapel);
-                        if(cardToAddToChapel != -1) {
-                            chapelFunc(&playerArr[j], cardToAddToChapel, &discardDeck);
-                        }
+        
+        //activate chapel before choosing roles
+        for(int j = 0; j < noOfPlayers; j++) {
+            if(searchPlayerBuilding(playerArr[j], chapel)) {
+                if(!playerArr[j].isBot) {
+                    //let player choose what to add to chapel
+                    int cardToAddToChapel = -1;
+                    printf("___choose card to add to chapel input -1 to not add cards___\n");
+                    printPlayerHand(playerArr[j]);
+                    printf("__________________\n");
+                    scanf(" %d", &cardToAddToChapel);
+                    if(cardToAddToChapel != -1) {
+                        chapelFunc(&playerArr[j], cardToAddToChapel, &discardDeck);
                     }
-                    //bot will not add hahaha
                 }
+                //bot will not add hahaha
             }
-            
-            //check handsize > 7
-            for(int j = 0; j < noOfPlayers; j++) {
-                if(getHandSize(playerArr[j]) > 7) {
-                    //tower allow handsize up to 12
-                    if(searchPlayerBuilding(playerArr[j], tower)) {
-                        if(getHandSize(playerArr[j]) > 12) {
-                            int noOfCardsToDiscard = getHandSize(playerArr[j]) - 12;
-                            printf("hand size more than 12 choose cards to discard\n");
-                            while(noOfCardsToDiscard > 0) {
-                                int cardToDiscardIndex = -1;
-                                if(!playerArr[j].isBot) {
-                                    //let human player choose what to discard
-                                    printf("___cards to discard %d___\n", noOfCardsToDiscard);
-                                    printPlayerHand(playerArr[j]);
-                                    printf("__________________\n");
-                                    printf("enter card to discard: ");
-                                    scanf(" %d", &cardToDiscardIndex);
-                                } else {
-                                    //bot discards the first card
-                                    cardToDiscardIndex = 0;
-                                }
-                                discardCard(&playerArr[j], &discardDeck, cardToDiscardIndex);
-                                noOfCardsToDiscard--;
-                            }
-                        }
-                    } else {
-                        int noOfCardsToDiscard = getHandSize(playerArr[j]) - 7;
-                        printf("hand size more than 7 choose cards to discard\n");
+        }
+        
+        //check handsize > 7
+        for(int j = 0; j < noOfPlayers; j++) {
+            if(getHandSize(playerArr[j]) > 7) {
+                //tower allow handsize up to 12
+                if(searchPlayerBuilding(playerArr[j], tower)) {
+                    if(getHandSize(playerArr[j]) > 12) {
+                        int noOfCardsToDiscard = getHandSize(playerArr[j]) - 12;
+                        printf("hand size more than 12 choose cards to discard\n");
                         while(noOfCardsToDiscard > 0) {
                             int cardToDiscardIndex = -1;
                             if(!playerArr[j].isBot) {
@@ -172,7 +145,35 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                             noOfCardsToDiscard--;
                         }
                     }
+                } else {
+                    int noOfCardsToDiscard = getHandSize(playerArr[j]) - 7;
+                    printf("hand size more than 7 choose cards to discard\n");
+                    while(noOfCardsToDiscard > 0) {
+                        int cardToDiscardIndex = -1;
+                        if(!playerArr[j].isBot) {
+                            //let human player choose what to discard
+                            printf("___cards to discard %d___\n", noOfCardsToDiscard);
+                            printPlayerHand(playerArr[j]);
+                            printf("__________________\n");
+                            printf("enter card to discard: ");
+                            scanf(" %d", &cardToDiscardIndex);
+                        } else {
+                            //bot discards the first card
+                            cardToDiscardIndex = 0;
+                        }
+                        discardCard(&playerArr[j], &discardDeck, cardToDiscardIndex);
+                        noOfCardsToDiscard--;
+                    }
                 }
+            }
+        }
+        
+        //set roles starting from govenor
+        for(int i = 0; i < noOfPlayers; i++) {
+            int playerArrIndex = governor+i;
+            
+            if(playerArrIndex >= noOfPlayers) {
+                playerArrIndex -= noOfPlayers;
             }
             
             //check deck
