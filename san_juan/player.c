@@ -56,7 +56,7 @@ void printPlayerHand(player player1) {
     for(int i = 0; i < 110; i++) {
         if(player1.hand[i].cardName != -1) {
             //don't print null cards
-            printf("%d - %20s cost: %d vp: %d\n", i, buildingStr[player1.hand[i].cardName], player1.hand[i].cost, player1.hand[i].victoryPoint);
+            printf("%d - %20s cost: %d vp: %d %s\n", i, buildingStr[player1.hand[i].cardName], player1.hand[i].cost, player1.hand[i].victoryPoint, player1.hand[i].cardDescription);
         }
     }
 }
@@ -211,7 +211,7 @@ void printPlayerBuildings(player player1) {
         if(player1.buildingCardsArr[i].cardName == -1) {
             return;
         } else {
-            printf("%d - %20s cost: %d vp: %d\n", i, buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint);
+            printf("%d - %20s cost: %d vp: %d %s\n", i, buildingStr[player1.buildingCardsArr[i].cardName], player1.buildingCardsArr[i].cost, player1.buildingCardsArr[i].victoryPoint, player1.buildingCardsArr[i].cardDescription);
         }
     }
 }

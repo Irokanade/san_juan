@@ -294,7 +294,7 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                             printf("___Choose card to build___\n");
                             for(int k = 0; k < 110; k++) {
                                 if(craneSufficientCost(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k], buildingToOverrideIndex) && playerArr[playerBuildIndex].hand[k].cardName != -1) {
-                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                                    printf("%d - %20s cost: %d vp: %d %s\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint, playerArr[playerBuildIndex].hand[k].cardDescription);
                                 }
                             }
                             printf("________________________\n");
@@ -307,9 +307,9 @@ void sanJuanGame(int noOfPlayers, int noOfBots) {
                                 if(playerArr[playerBuildIndex].hand[k].cardName == -1) {
                                     break;
                                 } else if(sufficientCostToBuild(playerArr[playerBuildIndex], playerArr[playerBuildIndex].hand[k]) != -1) {
-                                    printf("%d - %20s cost: %d vp: %d\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                                    printf("%d - %20s cost: %d vp: %d %s\n", k, buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint, playerArr[playerBuildIndex].hand[k].cardDescription);
                                 } else {
-                                    printf("not enoungh cards to build %20s cost: %d vp: %d\n", buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint);
+                                    printf("not enoungh cards to build %20s cost: %d vp: %d %s\n", buildingStr[playerArr[playerBuildIndex].hand[k].cardName], playerArr[playerBuildIndex].hand[k].cost, playerArr[playerBuildIndex].hand[k].victoryPoint, playerArr[playerBuildIndex].hand[k].cardDescription);
                                 }
                             }
                             printf("__________________\n");

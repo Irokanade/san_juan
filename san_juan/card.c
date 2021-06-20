@@ -7,6 +7,7 @@
 
 #include "card.h"
 #include <stdlib.h>
+#include <string.h>
 
 void cleanUpCardArr(card *cardArr) {
     //test print
@@ -74,6 +75,7 @@ void initCard(card *card1) {
     card1->cardName = -1;
     card1->cost = 0;
     card1->victoryPoint = 0;
+    memset(card1->cardDescription, 0, strBuff);
 }
 
 void setCard(card *card1) {    
@@ -120,6 +122,67 @@ void setCard(card *card1) {
     //city hall, guild hall, palace, triumphal arch have no base vp
     if(card1->cardName >= cityHall && card1->cardName <= triumphalArch) {
         card1->victoryPoint = 0;
+    }
+    
+    //set card description
+    if(card1->cardName == indigoPlant) {
+        strncpy(card1->cardDescription, "producer phase owner produces one indigo", strBuff);
+    } else if(card1->cardName == sugarMill) {
+        strncpy(card1->cardDescription, "producer phase owner produces one sugar", strBuff);
+    } else if(card1->cardName == tobaccoStorage) {
+        strncpy(card1->cardDescription, "producer phase owner produces one tabacco", strBuff);
+    } else if(card1->cardName == coffeeRoaster) {
+        strncpy(card1->cardDescription, "producer phase owner produces one coffee", strBuff);
+    } else if(card1->cardName == silverSmelter) {
+        strncpy(card1->cardDescription, "producer phase owner produces one silver", strBuff);
+    } else if(card1->cardName == archive) {
+        strncpy(card1->cardDescription, "councillor phase owner may discard hand cards in addtion to drawn cards", strBuff);
+    } else if(card1->cardName == goldmine) {
+        strncpy(card1->cardDescription, "prospector phase owner turns up 4 cards from the supply, if all have different building costs, he may add one to his hand", strBuff);
+    } else if(card1->cardName == smithy) {
+        strncpy(card1->cardDescription, "builder phase owner pays 1 card less when building a production building", strBuff);
+    } else if(card1->cardName == blackMarket) {
+        strncpy(card1->cardDescription, "builder phase owner may discard any 1 or 2 goods and reduce the building cost by 1 or 2 cards", strBuff);
+    } else if(card1->cardName == crane) {
+        strncpy(card1->cardDescription, "builder phase owner may build over one of his buildings(and pay the difference)", strBuff);
+    } else if(card1->cardName == marketStand) {
+        strncpy(card1->cardDescription, "trader phase owner takes 1 card from the supply when he sells at least 2 goods", strBuff);
+    } else if(card1->cardName == poorHouse) {
+        strncpy(card1->cardDescription, "builder phase owner takes 1 card from the supply if he has only 0 or 1 hand card after building", strBuff);
+    } else if(card1->cardName == tradingHouse) {
+        strncpy(card1->cardDescription, "trader phase owner may sell 1 additional good", strBuff);
+    } else if(card1->cardName == well) {
+        strncpy(card1->cardDescription, "producer phase owner takes 1 card from the supply when he produces at least 2 goods", strBuff);
+    } else if(card1->cardName == aqueduct) {
+        strncpy(card1->cardDescription, "producer phase owner produces 1 good more", strBuff);
+    } else if(card1->cardName == carpenter) {
+        strncpy(card1->cardDescription, "builder phase owner takes 1 card from supply after he builds a violet building", strBuff);
+    } else if(card1->cardName == chapel) {
+        strncpy(card1->cardDescription, "governor phase owner may place 1 hand card under his chapel(each worth 1 VP at game end)", strBuff);
+    } else if(card1->cardName == statue) {
+        strncpy(card1->cardDescription, "monument(no special function)", strBuff);
+    } else if(card1->cardName == tower) {
+        strncpy(card1->cardDescription, "governor phase owner may have up to 12 cards in his hand", strBuff);
+    } else if(card1->cardName == marketHall) {
+        strncpy(card1->cardDescription, "trader phase owner takes 1 card more for selling one good", strBuff);
+    } else if(card1->cardName == prefecture) {
+        strncpy(card1->cardDescription, "councillor phase owner keeps 1 card more from those drawn", strBuff);
+    } else if(card1->cardName == quarry) {
+        strncpy(card1->cardDescription, "builder phase owner pays 1 card less when building a violet building", strBuff);
+    } else if(card1->cardName == victoryColumn) {
+        strncpy(card1->cardDescription, "monument(no special function)", strBuff);
+    } else if(card1->cardName == hero) {
+        strncpy(card1->cardDescription, "monument(no special function)", strBuff);
+    } else if(card1->cardName == library) {
+        strncpy(card1->cardDescription, "all phases owner uses the privilege of his role twice", strBuff);
+    } else if(card1->cardName == cityHall) {
+        strncpy(card1->cardDescription, "at game end owner earns 1 additional victory point for each for his violet buildings", strBuff);
+    } else if(card1->cardName == guildHall) {
+        strncpy(card1->cardDescription, "at game end owner earns 2 additional victory points for each of his production buildings", strBuff);
+    } else if(card1->cardName == palace) {
+        strncpy(card1->cardDescription, "at game end owner earns additional victory point for every 4 victory points", strBuff);
+    } else if(card1->cardName == triumphalArch) {
+        strncpy(card1->cardDescription, "at game end owner earns an additional 4-6-8 victory points for 1-2-3 monuments", strBuff);
     }
 }
 

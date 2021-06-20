@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#define strBuff 257
+
 typedef enum _building {
     //represent nullCard
     nullCard = -1,
@@ -91,6 +93,7 @@ typedef struct _card {
     building cardName;
     uint8_t cost;
     uint8_t victoryPoint;
+    char cardDescription[strBuff];
 } card;
 
 typedef struct _deck {
